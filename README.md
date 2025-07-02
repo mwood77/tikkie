@@ -17,6 +17,11 @@ Since this is serverless, most of the scaling is handled automatically. Specific
 - DynamoDB is spec'd as `PAY_PER_REQUEST`, which is fully managed by AWS
 - Lambda has a max concurrency threshold, and minimum and maximum replica counts set. These values can be tweaked in the environment file.
 
+### Reflection & Improvements
+1. The most challenging part of the assignment was learning AWS CDK and SAM - tools I've never used before. There's a decent amount to unpack under the hood, and it didn't play so well with the runtime validation library I choose (typia). However, this is more pilot error, than anything.
+1. The lambda could be rewritten to be idempotent - this an especially important consideration when dealing with financial information; I guess we'd want "eventual consistency" between the db and the event. As it stands, it's not that, but rather a bunch of try/catch statements with a modicum of error handling.
+1. Development environment is perhaps a bit overkill, but it was a learning experience with lambda and these tools.
+
 ### Development
 
 #### Prerequisites (Steps)

@@ -56,7 +56,7 @@ describe('create-person Lambda', () => {
             city: { S: 'Seattle' },
             state: { S: 'WA' },
             country: { S: 'USA' },
-            zipCode: { S: '98101' },
+            postalCode: { S: '98101' },
           },
         },
       },
@@ -155,4 +155,69 @@ describe('create-person Lambda', () => {
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.body)).toEqual({ error: 'Invalid JSON body' });
   });
+
+  it('returns 500 when DynamoDB fails', async () => {
+    ddbMock.on(PutItemCommand).rejects(new Error('DynamoDB connection failed'));
+    ebMock.on(PutEventsCommand).resolves({ Entries: [{ EventId: 'event-123' }] });
+
+    const response = await handler(
+      createApiGatewayEvent({
+        body: JSON.stringify({
+          firstName: 'Alice',
+          lastName: 'Smith',
+          phoneNumber: '555-1234',
+          address: {
+            street: 'AWS Way',
+            houseNumber: '1',
+            city: 'Seattle',
+            state: 'WA',
+            country: 'USA',
+            postalCode: '98101',
+          },
+        }),
+      })
+    );
+
+    expect(response.statusCode).toBe(500);
+    expect(JSON.parse(response.body)).toEqual({ 
+      error: 'Failed to create person' 
+    });
+    
+    // EventBridge should not be called if DynamoDB fails
+    expect(ebMock.calls()).toHaveLength(0);
+  });
+
+  it('returns 500 when EventBridge fails (but person is still created)', async () => {
+    ddbMock.on(PutItemCommand).resolves({});
+    // Make EventBridge feel sad
+    ebMock.on(PutEventsCommand).rejects(new Error('EventBridge unavailable'));
+
+    const response = await handler(
+      createApiGatewayEvent({
+        body: JSON.stringify({
+          firstName: 'Alice',
+          lastName: 'Smith',
+          phoneNumber: '555-1234',
+          address: {
+            street: 'AWS Way',
+            houseNumber: '1',
+            city: 'Seattle',
+            state: 'WA',
+            country: 'USA',
+            postalCode: '98101',
+          },
+        }),
+      })
+    );
+
+    expect(response.statusCode).toBe(500);
+    expect(JSON.parse(response.body)).toEqual({ 
+      error: 'Failed to publish event' 
+    });
+    
+    // DynamoDB is still called because we're now deleting the person,
+    // due to event bridge's failure
+    expect(ddbMock.calls()).toHaveLength(2);
+  });
+
 });
