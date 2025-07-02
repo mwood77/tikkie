@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import 'dotenv/config';
+
 import * as cdk from 'aws-cdk-lib';
 import { PersonServiceStack } from '../lib/person-service-stack';
 
@@ -10,7 +12,7 @@ new PersonServiceStack(app, 'PersonServiceStack', {
 
   /* Uncomment the next line to specialize this stack for the AWS Account
    * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */

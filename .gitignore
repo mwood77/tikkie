@@ -1,7 +1,13 @@
-*.js
+# Stuff we don't want to commit
 !jest.config.js
 *.d.ts
+*.js
 node_modules
+
+# Stuff we really don't want to commit
+*.env
+!jest.env.js
+!generate-openapi.js
 
 # CDK asset staging directory
 .cdk.staging

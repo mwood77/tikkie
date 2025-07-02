@@ -8,19 +8,36 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "build:lambda": "tsc --project tsconfig.json",
+    "deploy": "npm run build:lambda && cdk deploy --require-approval never",
+    "init": "rm -rf node_modules && npm install && cp .env.template .env",
+    "prepare": "ts-patch install",
+    "generate-openapi": "node generate-openapi.js"
   },
   "devDependencies": {
+    "@aws-cdk/assertions": "^1.203.0",
+    "@ryoppippi/unplugin-typia": "^2.6.5",
+    "@types/aws-lambda": "^8.10.150",
     "@types/jest": "^29.5.14",
     "@types/node": "22.7.9",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
     "aws-cdk": "2.1020.0",
+    "aws-cdk-lib": "2.202.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "constructs": "^10.0.0",
+    "jest": "^29.7.0",
+    "json-schema-to-openapi-schema": "^0.4.0",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "~5.6.3"
+    "ts-patch": "^3.3.0",
+    "typescript": "~5.8.3",
+    "typescript-json-schema": "^0.65.1"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.202.0",
-    "constructs": "^10.0.0"
+    "@aws-sdk/client-dynamodb": "^3.840.0",
+    "@aws-sdk/client-eventbridge": "^3.840.0",
+    "dotenv": "^17.0.1",
+    "ttsc": "^0.3.1",
+    "typia": "^9.3.1"
   }
 }

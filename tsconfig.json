@@ -22,7 +22,13 @@
     "strictPropertyInitialization": false,
     "typeRoots": [
       "./node_modules/@types"
-    ]
+    ],
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ],
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",

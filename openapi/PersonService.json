@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Person Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/person": {
+      "post": {
+        "summary": "Create a person",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Person"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Person created"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:{__REGION__}:lambda:path/2015-03-31/functions/{__LAMBDA_ARN__}/invocations",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Person": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "address",
+          "firstName",
+          "lastName",
+          "phoneNumber"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "string"
+          },
+          "apartmentNumber": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "city",
+          "country",
+          "houseNumber",
+          "postalCode",
+          "state",
+          "street"
+        ]
+      }
+    }
+  }
+}
