@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  PersonTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: PersonTable
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  CreatePersonFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs18.x
+      CodeUri: ../dist/lambda/
+      Handler: create-person.handler
+      Environment:
+        Variables:
+          TABLE_NAME: "PersonTable"
+          EVENT_BUS_NAME: "PersonEvents"
+      Events:
+        PersonApi:
+          Type: Api
+          Properties:
+            Path: /person
+            Method: post

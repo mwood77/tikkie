@@ -9,6 +9,7 @@ This was an interesting assignment, as I'd never worked on serverless stuff, nor
 - Lambda (TypeScript)
 - DynamoDB
 - AWS CDK (IaC & deployment & scaling)
+- AWS SAM (local dev & testing)
 
 ### A Word on Scaling
 Since this is serverless, most of the scaling is handled automatically. Specifically:
@@ -22,7 +23,7 @@ Since this is serverless, most of the scaling is handled automatically. Specific
 1. [Docker](https://www.docker.com/)
 1. Get [NodeJS](https://nodejs.org/en/download)
 1. NVM (NodeJS is distributed using NVM now, so you should have it)
-1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) & [AWS CDK](https://www.npmjs.com/package/aws-cdk) (I assume this is setup, configured, and bootstrapped). If not, please see:
+1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), [AWS CDK](https://www.npmjs.com/package/aws-cdk), & [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/prerequisites.html) (I assume these are setup, configured, and bootstrapped). If not, please see:
     - [Setting up the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html)
     - [Tutorial: Create your first AWS CDK app (Steps 2 & 3)](https://docs.aws.amazon.com/cdk/v2/guide/hello-world.html#hello-world-configure)
 1. `cd` into _this_ - root - directory and execute `nvm install && nvm use`
@@ -37,13 +38,10 @@ Since this is serverless, most of the scaling is handled automatically. Specific
 1. You're now ready to Run, Test, and Deploy the project!
 
 #### Interacting with this project
-You can see it alive on the web at:
-- `https://jzehy8yyra.execute-api.us-east-1.amazonaws.com/prod/person`
-
-You can send it a request if you'd like:
+This project is deployed - you can send it a request if you'd like:
 ```shell
 // Request
-curl -X POST "https://jzehy8yyra.execute-api.us-east-1.amazonaws.com/prod/person" \
+curl -X POST "https://ert3pqshp9.execute-api.us-east-1.amazonaws.com/prod/person" \
      -H "Content-Type: application/json" \
      -d '{
        "firstName": "Billy Bob",
@@ -73,9 +71,38 @@ curl -X POST "https://jzehy8yyra.execute-api.us-east-1.amazonaws.com/prod/person
 
 #### Running this project
 
-> @todo
+##### Local development
 
-##### Local Testing
+You've got a 2 options:
+
+1. You can run the lambda with a valid event payload by executing this command:
+    ```shell
+    npm run sam:invoke
+    ```
+1. You can run a mocked stack (lambda, api gateway, dynamodb) by executing:
+    ```shell
+    npm run local:dev
+
+    # now you can invoke it:
+    curl -X POST "http://127.0.0.1:3000/person" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "firstName": "Billy Bob",
+       "lastName": "Thorton",
+       "phoneNumber": "06-123-4567",
+       "address": {
+         "street": "Pine Street",
+         "houseNumber": "5",
+         "city": "Somewhere",
+         "state": "Provincie Utrecht",
+         "country": "NL",
+         "postalCode": "1111 AB"
+       }
+     }'
+    ```
+    Note, this doesn't support live-reload.
+
+##### Testing
 
 You can run tests locally with the following command:
 ```shell
