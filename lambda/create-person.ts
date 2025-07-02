@@ -8,7 +8,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Person } from '../interfaces/person';
 
-const db = new DynamoDBClient({});
+const db = new DynamoDBClient({
+    ...(process.env.AWS_SAM_LOCAL && {
+      endpoint: 'http://host.docker.internal:8000'
+    })
+});
 const eb = new EventBridgeClient({});
 const TABLE_NAME = process.env.TABLE_NAME;
 

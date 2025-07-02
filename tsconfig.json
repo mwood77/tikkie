@@ -3,6 +3,8 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "outDir": "dist",
     "lib": [
       "es2022"
     ],
@@ -30,8 +32,14 @@
     ],
     "skipLibCheck": true
   },
+  "include": [
+    "lambda/**/*", 
+    "interfaces/**/*", 
+    "src/**/*"
+    ],
   "exclude": [
     "node_modules",
-    "cdk.out"
+    "cdk.out",
+    "/**/*/__tests__/**/*", 
   ]
 }
